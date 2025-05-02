@@ -1,4 +1,4 @@
-package fhv.homeautomation.homeautomation;
+package at.fhv.sysarch.lab2;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
