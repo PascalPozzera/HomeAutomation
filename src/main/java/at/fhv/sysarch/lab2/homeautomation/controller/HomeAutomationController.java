@@ -25,6 +25,7 @@ public class HomeAutomationController {
         return ResponseEntity.ok().build();
     }
 
+    //if it's necessary to set the temperature manually, currently not in use
     @PostMapping("/temperature")
     public ResponseEntity<Void> sendTemperature(@RequestParam double value) {
         airCondition.tell(new AirCondition.EnrichedTemperature(value, "Celsius"));

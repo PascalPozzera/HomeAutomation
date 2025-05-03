@@ -67,21 +67,21 @@ public class AirCondition extends AbstractBehavior<AirCondition.AirConditionComm
         return Behaviors.same();
     }
 
-    private Behavior<AirConditionCommand> onReadTemperature(EnrichedTemperature r) {
-        getContext().getLog().info("AirCondition reading {} {}", r.value, r.unit);
+    private Behavior<AirConditionCommand> onReadTemperature(EnrichedTemperature cmd) {
+        getContext().getLog().info("AirCondition reading {} {}", cmd.value, cmd.unit);
 
-        if (r.value > 25.0 && !isOn) {
+        if (cmd.value > 25.0 && !isOn) {
             getContext().getSelf().tell(new PowerAirCondition(true));
-        } else if (r.value <= 25.0 && isOn) {
+        } else if (cmd.value <= 25.0 && isOn) {
             getContext().getSelf().tell(new PowerAirCondition(false));
         }
 
         return Behaviors.same();
     }
 
-    private Behavior<AirConditionCommand> onSwitchSensorMode(SwitchSensorMode msg) {
-        getContext().getLog().info("Switching sensor mode to {}", msg.simulate ? "SIMULATION" : "MANUAL");
-        tempSensor.tell(new TemperatureSensor.SwitchMode(msg.simulate));
+    private Behavior<AirConditionCommand> onSwitchSensorMode(SwitchSensorMode cmd) {
+        getContext().getLog().info("Switching sensor mode to {}", cmd.simulate ? "SIMULATION" : "MANUAL");
+        tempSensor.tell(new TemperatureSensor.SwitchMode(cmd.simulate));
         return Behaviors.same();
     }
 
@@ -97,5 +97,4 @@ public class AirCondition extends AbstractBehavior<AirCondition.AirConditionComm
             this.simulate = simulate;
         }
     }
-
 }
