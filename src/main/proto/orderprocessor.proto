@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "at.fhv.sysarch.lab2.homeautomation.devices.fridge.grpc";
+option java_outer_classname = "OrderProcessorProto";
+
+package orderprocessor;
+
+service OrderProcessor {
+  rpc ProcessOrder (OrderRequest) returns (ReceiptResponse) {}
+}
+
+message ProductProto {
+  string id = 1;
+  string name = 2;
+  string price = 3;
+  double weight = 4;
+}
+
+message OrderItemProto {
+  ProductProto product = 1;
+  int32 quantity = 2;
+}
+
+message OrderRequest {
+  string order_id = 1;
+  string timestamp = 2;
+  repeated OrderItemProto items = 3;
+}
+
+message ReceiptResponse {
+  string order_id = 1;
+  string timestamp = 2;
+  repeated OrderItemProto items = 3;
+  string total_price = 4;
+}

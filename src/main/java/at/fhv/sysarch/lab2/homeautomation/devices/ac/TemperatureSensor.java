@@ -4,6 +4,7 @@ import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.PostStop;
 import akka.actor.typed.javadsl.*;
+import at.fhv.sysarch.lab2.homeautomation.environment.EnvironmentSimulator;
 
 import java.time.Duration;
 
@@ -28,6 +29,18 @@ public class TemperatureSensor extends AbstractBehavior<TemperatureSensor.Temper
     }
 
     public static final class Tick implements TemperatureCommand {}
+
+    public static final class EnvironmentTemperatureUpdate implements TemperatureCommand {
+        final double temperature;
+
+        public EnvironmentTemperatureUpdate(double temperature) {
+            this.temperature = temperature;
+        }
+
+        public double getTemperature() {
+            return temperature;
+        }
+    }
 
     public static Behavior<TemperatureCommand> create(ActorRef<AirCondition.AirConditionCommand> airCondition) {
         return Behaviors.setup(context -> Behaviors.withTimers(timers ->
@@ -55,6 +68,7 @@ public class TemperatureSensor extends AbstractBehavior<TemperatureSensor.Temper
                 .onMessage(ReadTemperature.class, this::onReadTemperature)
                 .onMessage(SwitchMode.class, this::onSwitchMode)
                 .onMessage(Tick.class, this::onTick)
+                .onMessage(EnvironmentTemperatureUpdate.class, this::onEnvironmentTemperatureUpdate)
                 .onSignal(PostStop.class, signal -> onPostStop())
                 .build();
     }
@@ -86,6 +100,14 @@ public class TemperatureSensor extends AbstractBehavior<TemperatureSensor.Temper
             double simulated = 20 + Math.random() * 10; // 20–30°C
             getContext().getLog().info("Simulated temperature: {}", simulated);
             airCondition.tell(new AirCondition.EnrichedTemperature(simulated, "Celsius"));
+        }
+        return this;
+    }
+
+    private Behavior<TemperatureCommand> onEnvironmentTemperatureUpdate(EnvironmentTemperatureUpdate msg) {
+        if (simulateMode) {
+            getContext().getLog().info("Environment temperature update: {}", msg.getTemperature());
+            airCondition.tell(new AirCondition.EnrichedTemperature(msg.getTemperature(), "Celsius"));
         }
         return this;
     }
