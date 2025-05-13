@@ -93,18 +93,30 @@ export default function MediaStationComponent() {
                         </div>
 
                         <div className="space-y-2">
-                            <button
-                                onClick={playMovie}
-                                className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600"
-                            >
-                                ▶️ Play "Inception"
-                            </button>
-                            <button
-                                onClick={stopMovie}
-                                className="w-full bg-gray-200 text-black py-2 rounded-lg hover:bg-gray-300"
-                            >
-                                ⏹️ Stop Movie
-                            </button>
+                            <div className="space-y-2">
+                                <button
+                                    onClick={playMovie}
+                                    className={`w-full py-2 rounded-lg ${
+                                        isPlaying
+                                            ? "bg-indigo-500 text-white"
+                                            : "bg-gray-200 text-black hover:bg-gray-300"
+                                    }`}
+                                >
+                                    ▶️ Play "Inception"
+                                </button>
+
+                                <button
+                                    onClick={stopMovie}
+                                    className={`w-full py-2 rounded-lg ${
+                                        !isPlaying
+                                            ? "bg-indigo-500 text-white"
+                                            : "bg-gray-200 text-black hover:bg-gray-300"
+                                    }`}
+                                >
+                                    ⏹️ Stop Movie
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>

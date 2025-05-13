@@ -81,18 +81,29 @@ export default function AirConditionComponent() {
                         </div>
 
                         <div className="space-y-2">
-                            <button
-                                onClick={() => switchPower(true)}
-                                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-                            >
-                                Turn ON
-                            </button>
-                            <button
-                                onClick={() => switchPower(false)}
-                                className="w-full bg-gray-200 text-black py-2 rounded hover:bg-gray-300"
-                            >
-                                Turn OFF
-                            </button>
+                            <div className="space-y-2">
+                                <button
+                                    onClick={() => switchPower(true)}
+                                    className={`w-full py-2 rounded ${
+                                        isOn
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-gray-200 text-black hover:bg-gray-300"
+                                    }`}
+                                >
+                                    Turn ON
+                                </button>
+                                <button
+                                    onClick={() => switchPower(false)}
+                                    className={`w-full py-2 rounded ${
+                                        isOn === false
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-gray-200 text-black hover:bg-gray-300"
+                                    }`}
+                                >
+                                    Turn OFF
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>

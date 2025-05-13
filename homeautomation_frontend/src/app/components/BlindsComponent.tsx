@@ -65,33 +65,45 @@ export default function BlindsComponent() {
 
                         <div className="text-center text-gray-700 mb-4">
                             {isOpen !== null ? (
-                                <p className="text-lg">
-                                    Current state:{" "}
-                                    <strong className={isOpen ? "text-green-600" : "text-red-600"}>
-                                        <p className="text-sm text-gray-500">
-                                            {isOpen === null ? "Loading..." : isOpen ? "Open" : "Closed"}
-                                        </p>
-
-                                    </strong>
-                                </p>
+                                <>
+                                    <p className="text-lg">
+                                        Current state:{" "}
+                                        <strong className={isOpen ? "text-green-600" : "text-red-600"}>
+                                            {isOpen ? "Open" : "Closed"}
+                                        </strong>
+                                    </p>
+                                </>
                             ) : (
                                 <p className="text-sm text-gray-400">Loading status...</p>
                             )}
                         </div>
 
+
                         <div className="space-y-2">
-                            <button
-                                onClick={openBlinds}
-                                className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
-                            >
-                                🪟 Open Blinds
-                            </button>
-                            <button
-                                onClick={closeBlinds}
-                                className="w-full bg-gray-200 text-black py-2 rounded-lg hover:bg-gray-300"
-                            >
-                                🧱 Close Blinds
-                            </button>
+                            <div className="space-y-2">
+                                <button
+                                    onClick={openBlinds}
+                                    className={`w-full py-2 rounded-lg ${
+                                        isOpen
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-gray-200 text-black hover:bg-gray-300"
+                                    }`}
+                                >
+                                    Open Blinds
+                                </button>
+
+                                <button
+                                    onClick={closeBlinds}
+                                    className={`w-full py-2 rounded-lg ${
+                                        isOpen === false
+                                            ? "bg-blue-500 text-white"
+                                            : "bg-gray-200 text-black hover:bg-gray-300"
+                                    }`}
+                                >
+                                    Close Blinds
+                                </button>
+                            </div>
+
                         </div>
                     </div>
                 </div>
