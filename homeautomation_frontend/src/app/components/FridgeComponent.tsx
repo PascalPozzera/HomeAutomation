@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import {useState, useEffect, useRef} from "react";
+import * as React from 'react';
+
 
 export default function FridgeComponent() {
     const [open, setOpen] = useState(false);
@@ -6,7 +8,7 @@ export default function FridgeComponent() {
     const [history, setHistory] = useState<any>([]);
     const [receipts, setReceipts] = useState<any>([]);
     const [loading, setLoading] = useState(false);
-    const [order, setOrder] = useState({ name: "", price: 0, weight: 0, quantity: 1 });
+    const [order, setOrder] = useState({name: "", price: 0, weight: 0, quantity: 1});
     const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -52,12 +54,15 @@ export default function FridgeComponent() {
     };
 
     const consume = async (id: string, quantity: number) => {
-        await fetch(`/api/fridge/consume?id=${id}&quantity=${quantity}`, { method: "POST" });
+        await fetch(`/api/fridge/consume?id=${id}&quantity=${quantity}`, {method: "POST"});
         await fetchContents();
+        await fetchHistory();
+        await fetchReceipts();
     };
 
+
     const submitOrder = async () => {
-        const { name, price, weight, quantity } = order;
+        const {name, price, weight, quantity} = order;
 
         if (!name || price <= 0 || weight <= 0 || quantity <= 0) {
             alert("Please fill out all fields correctly.");
@@ -66,10 +71,10 @@ export default function FridgeComponent() {
 
         await fetch(
             `/api/fridge/order?name=${encodeURIComponent(name)}&price=${price}&weight=${weight}&quantity=${quantity}`,
-            { method: "POST" }
+            {method: "POST"}
         );
 
-        setOrder({ name: "", price: 0, weight: 0, quantity: 1 });
+        setOrder({name: "", price: 0, weight: 0, quantity: 1});
         await fetchContents();
         await fetchHistory();
         await fetchReceipts();
@@ -81,7 +86,7 @@ export default function FridgeComponent() {
                 onClick={() => setOpen(true)}
                 className="relative bg-white shadow-md rounded-xl p-4 text-center cursor-pointer hover:shadow-lg transition"
             >
-                <img src="/fridge-icon.png" alt="Fridge" className="w-16 h-16 mx-auto mb-2" />
+                <img src="/fridge-icon.png" alt="Fridge" className="w-16 h-16 mx-auto mb-2"/>
                 <h2 className="text-lg font-semibold text-gray-800">Fridge</h2>
                 <p className="text-sm text-gray-500">
                     {contents
@@ -132,37 +137,49 @@ export default function FridgeComponent() {
                                     ))}
                                 </div>
 
-                                <hr className="my-4" />
+                                <hr className="my-4"/>
                                 <h4 className="text-lg font-semibold mb-2 text-gray-700">Order Product</h4>
-                                <div className="space-y-2 text-sm mb-6">
-                                    <input
-                                        type="text"
-                                        placeholder="Product name"
-                                        className="w-full border p-2 rounded"
-                                        value={order.name}
-                                        onChange={(e) => setOrder({ ...order, name: e.target.value })}
-                                    />
-                                    <input
-                                        type="number"
-                                        placeholder="Price (€)"
-                                        className="w-full border p-2 rounded"
-                                        value={order.price}
-                                        onChange={(e) => setOrder({ ...order, price: parseFloat(e.target.value) })}
-                                    />
-                                    <input
-                                        type="number"
-                                        placeholder="Weight (kg)"
-                                        className="w-full border p-2 rounded"
-                                        value={order.weight}
-                                        onChange={(e) => setOrder({ ...order, weight: parseFloat(e.target.value) })}
-                                    />
-                                    <input
-                                        type="number"
-                                        placeholder="Quantity"
-                                        className="w-full border p-2 rounded"
-                                        value={order.quantity}
-                                        onChange={(e) => setOrder({ ...order, quantity: parseInt(e.target.value) })}
-                                    />
+                                <div className="space-y-4 text-sm mb-6 text-gray-800">
+                                    <div>
+                                        <label className="block mb-1 font-medium">Product Name</label>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g. Milk"
+                                            className="w-full border p-2 rounded text-gray-800"
+                                            value={order.name}
+                                            onChange={(e) => setOrder({...order, name: e.target.value})}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block mb-1 font-medium">Price (€)</label>
+                                        <input
+                                            type="number"
+                                            placeholder="e.g. 2.50"
+                                            className="w-full border p-2 rounded text-gray-800"
+                                            value={order.price}
+                                            onChange={(e) => setOrder({...order, price: parseFloat(e.target.value)})}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block mb-1 font-medium">Weight (kg)</label>
+                                        <input
+                                            type="number"
+                                            placeholder="e.g. 1.5"
+                                            className="w-full border p-2 rounded text-gray-800"
+                                            value={order.weight}
+                                            onChange={(e) => setOrder({...order, weight: parseFloat(e.target.value)})}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block mb-1 font-medium">Quantity</label>
+                                        <input
+                                            type="number"
+                                            placeholder="e.g. 1"
+                                            className="w-full border p-2 rounded text-gray-800"
+                                            value={order.quantity}
+                                            onChange={(e) => setOrder({...order, quantity: parseInt(e.target.value)})}
+                                        />
+                                    </div>
                                     <button
                                         onClick={submitOrder}
                                         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full"
@@ -171,7 +188,8 @@ export default function FridgeComponent() {
                                     </button>
                                 </div>
 
-                                <hr className="my-4" />
+
+                                <hr className="my-4"/>
                                 <h4 className="text-lg font-semibold mb-2 text-gray-700">Order History</h4>
                                 {history.length > 0 ? (
                                     <div className="space-y-4 mb-6">
@@ -194,7 +212,7 @@ export default function FridgeComponent() {
                                     <p className="text-sm text-gray-500">No orders yet.</p>
                                 )}
 
-                                <hr className="my-4" />
+                                <hr className="my-4"/>
                                 <h4 className="text-lg font-semibold mb-2 text-gray-700">Receipts</h4>
                                 {receipts.length > 0 ? (
                                     <div className="space-y-4">
