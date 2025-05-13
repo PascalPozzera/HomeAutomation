@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function FridgeComponent() {
     const [open, setOpen] = useState(false);
@@ -7,12 +7,29 @@ export default function FridgeComponent() {
     const [receipts, setReceipts] = useState<any>([]);
     const [loading, setLoading] = useState(false);
     const [order, setOrder] = useState({ name: "", price: 0, weight: 0, quantity: 1 });
+    const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         fetchContents();
         fetchHistory();
         fetchReceipts();
     }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        if (open) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [open]);
 
     const fetchContents = async () => {
         setLoading(true);
@@ -74,13 +91,10 @@ export default function FridgeComponent() {
             </div>
 
             {open && (
-                <div
-                    className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-center justify-center z-50"
-                    onClick={() => setOpen(false)}
-                >
+                <div className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-start justify-center">
                     <div
+                        ref={modalRef}
                         className="bg-white rounded-xl p-6 w-[45rem] max-h-[90vh] overflow-y-auto shadow-2xl"
-                        onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-gray-800">Fridge Overview</h3>

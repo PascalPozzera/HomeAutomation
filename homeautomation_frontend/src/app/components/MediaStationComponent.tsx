@@ -1,15 +1,31 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function MediaStationComponent() {
     const [open, setOpen] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentMovie, setCurrentMovie] = useState<string | null>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
-    // Poll Media status
     useEffect(() => {
         const interval = setInterval(fetchStatus, 2000);
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        if (open) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [open]);
 
     const fetchStatus = async () => {
         try {
@@ -42,12 +58,10 @@ export default function MediaStationComponent() {
 
     return (
         <>
-            {/* Box */}
             <div
                 onClick={() => setOpen(true)}
                 className="relative bg-white shadow-md rounded-xl p-4 text-center cursor-pointer hover:shadow-lg transition"
             >
-                {/* LED */}
                 <div className="absolute top-3 right-3">
                     <div
                         className={`w-3 h-3 rounded-full ${
@@ -64,15 +78,11 @@ export default function MediaStationComponent() {
                 </p>
             </div>
 
-            {/* Modal */}
             {open && (
-                <div
-                    className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-center justify-center z-50"
-                    onClick={() => setOpen(false)}
-                >
+                <div className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-center justify-center z-50">
                     <div
+                        ref={modalRef}
                         className="bg-white rounded-xl p-6 w-96 shadow-2xl"
-                        onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-xl font-bold text-gray-800">Media Control</h3>
@@ -93,30 +103,27 @@ export default function MediaStationComponent() {
                         </div>
 
                         <div className="space-y-2">
-                            <div className="space-y-2">
-                                <button
-                                    onClick={playMovie}
-                                    className={`w-full py-2 rounded-lg ${
-                                        isPlaying
-                                            ? "bg-indigo-500 text-white"
-                                            : "bg-gray-200 text-black hover:bg-gray-300"
-                                    }`}
-                                >
-                                    ▶️ Play "Inception"
-                                </button>
+                            <button
+                                onClick={playMovie}
+                                className={`w-full py-2 rounded-lg ${
+                                    isPlaying
+                                        ? "bg-indigo-500 text-white"
+                                        : "bg-gray-200 text-black hover:bg-gray-300"
+                                }`}
+                            >
+                                ▶️ Play "Inception"
+                            </button>
 
-                                <button
-                                    onClick={stopMovie}
-                                    className={`w-full py-2 rounded-lg ${
-                                        !isPlaying
-                                            ? "bg-indigo-500 text-white"
-                                            : "bg-gray-200 text-black hover:bg-gray-300"
-                                    }`}
-                                >
-                                    ⏹️ Stop Movie
-                                </button>
-                            </div>
-
+                            <button
+                                onClick={stopMovie}
+                                className={`w-full py-2 rounded-lg ${
+                                    !isPlaying
+                                        ? "bg-indigo-500 text-white"
+                                        : "bg-gray-200 text-black hover:bg-gray-300"
+                                }`}
+                            >
+                                ⏹️ Stop Movie
+                            </button>
                         </div>
                     </div>
                 </div>

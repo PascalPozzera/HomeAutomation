@@ -1,9 +1,26 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function TemperatureSensorComponent() {
     const [open, setOpen] = useState(false);
     const [mode, setMode] = useState<"SIMULATION" | "MANUAL" | null>(null);
     const [environmentSource, setEnvironmentSource] = useState<"INTERNAL" | "EXTERNAL" | "MANUAL" | null>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        if (open) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [open]);
 
     const switchMode = async (simulate: boolean) => {
         await fetch(`/api/ac/sensor-mode?simulate=${simulate}`, { method: "POST" });
@@ -25,7 +42,6 @@ export default function TemperatureSensorComponent() {
 
     return (
         <>
-            {/* Sensor Box */}
             <div
                 onClick={() => setOpen(true)}
                 className="relative bg-white shadow-md rounded-xl p-4 text-center cursor-pointer hover:shadow-lg transition"
@@ -46,17 +62,12 @@ export default function TemperatureSensorComponent() {
                 <p className="text-sm text-gray-500">Manage temperature and weather</p>
             </div>
 
-            {/* Modal */}
             {open && (
-                <div
-                    className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-center justify-center z-50"
-                    onClick={() => setOpen(false)}
-                >
+                <div className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-start justify-center z-50">
                     <div
+                        ref={modalRef}
                         className="bg-white rounded-xl p-6 w-96 shadow-2xl"
-                        onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Header */}
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-xl font-bold text-gray-800">Sensor Settings</h3>
                             <button
@@ -67,7 +78,6 @@ export default function TemperatureSensorComponent() {
                             </button>
                         </div>
 
-                        {/* Environment Source */}
                         <div className="space-y-2 mb-6">
                             <p className="text-sm font-medium text-gray-600">🌍 Environment Source</p>
                             <div className="space-y-2">
@@ -91,8 +101,6 @@ export default function TemperatureSensorComponent() {
                                 </button>
                             </div>
                         </div>
-
-                        {/* Temperature Simulation */}
                         {environmentSource === "MANUAL" && (
                             <div className="space-y-2 mb-6">
                                 <p className="text-sm font-medium text-gray-600">🌡️ Simulate Temperature</p>
@@ -112,8 +120,6 @@ export default function TemperatureSensorComponent() {
                                 </div>
                             </div>
                         )}
-
-                        {/* Weather Control */}
                         {environmentSource === "MANUAL" && (
                             <div className="space-y-2">
                                 <p className="text-sm font-medium text-gray-600">⛅ Set Weather</p>

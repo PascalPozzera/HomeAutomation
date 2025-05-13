@@ -1,13 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function AirConditionComponent() {
     const [open, setOpen] = useState(false);
     const [isOn, setIsOn] = useState<boolean | null>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const interval = setInterval(fetchStatus, 2000);
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        if (open) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [open]);
 
     const fetchStatus = async () => {
         try {
@@ -23,7 +42,6 @@ export default function AirConditionComponent() {
         try {
             await fetch(`/api/ac/power?on=${on}`, { method: "POST" });
             await fetchStatus();
-
         } catch (err) {
             console.error("Failed to switch AC power:", err);
         }
@@ -55,13 +73,10 @@ export default function AirConditionComponent() {
 
             {/* Modal */}
             {open && (
-                <div
-                    className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50"
-                    onClick={() => setOpen(false)}
-                >
+                <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
                     <div
+                        ref={modalRef}
                         className="bg-white rounded-lg p-6 w-96 shadow-xl"
-                        onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-gray-800">AC Control</h3>
@@ -76,34 +91,31 @@ export default function AirConditionComponent() {
                         <div className="text-center text-lg text-gray-700 mb-4">
                             Current status:{" "}
                             <span className={isOn ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
-                {isOn ? "ON" : "OFF"}
-              </span>
+                                {isOn ? "ON" : "OFF"}
+                            </span>
                         </div>
 
                         <div className="space-y-2">
-                            <div className="space-y-2">
-                                <button
-                                    onClick={() => switchPower(true)}
-                                    className={`w-full py-2 rounded ${
-                                        isOn
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-gray-200 text-black hover:bg-gray-300"
-                                    }`}
-                                >
-                                    Turn ON
-                                </button>
-                                <button
-                                    onClick={() => switchPower(false)}
-                                    className={`w-full py-2 rounded ${
-                                        isOn === false
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-gray-200 text-black hover:bg-gray-300"
-                                    }`}
-                                >
-                                    Turn OFF
-                                </button>
-                            </div>
-
+                            <button
+                                onClick={() => switchPower(true)}
+                                className={`w-full py-2 rounded ${
+                                    isOn
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-200 text-black hover:bg-gray-300"
+                                }`}
+                            >
+                                Turn ON
+                            </button>
+                            <button
+                                onClick={() => switchPower(false)}
+                                className={`w-full py-2 rounded ${
+                                    isOn === false
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-gray-200 text-black hover:bg-gray-300"
+                                }`}
+                            >
+                                Turn OFF
+                            </button>
                         </div>
                     </div>
                 </div>
