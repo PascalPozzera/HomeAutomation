@@ -9,19 +9,15 @@ import at.fhv.sysarch.lab2.homeautomation.devices.fridge.Fridge;
 import at.fhv.sysarch.lab2.homeautomation.devices.media.MediaStation;
 import at.fhv.sysarch.lab2.homeautomation.devices.weather.Blinds;
 import at.fhv.sysarch.lab2.homeautomation.devices.weather.WeatherSensor;
-import at.fhv.sysarch.lab2.homeautomation.environment.EnvironmentSimulator;
-import at.fhv.sysarch.lab2.homeautomation.environment.MqttEnvironmentSource;
+import jakarta.annotation.PreDestroy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import jakarta.annotation.PreDestroy;
 
 import java.time.Duration;
 import java.util.concurrent.CompletionStage;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @SpringBootApplication
 public class HomeAutomationApplication {

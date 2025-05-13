@@ -51,14 +51,36 @@ public class AirCondition extends AbstractBehavior<AirCondition.AirConditionComm
         return Behaviors.setup(context -> new AirCondition(context, identifier));
     }
 
+    public boolean isOn() {
+        return this.isOn;
+    }
+
+
     @Override
     public Receive<AirConditionCommand> createReceive() {
         return newReceiveBuilder()
                 .onMessage(EnrichedTemperature.class, this::onReadTemperature)
                 .onMessage(PowerAirCondition.class, this::onPowerCommand)
                 .onMessage(SwitchSensorMode.class, this::onSwitchSensorMode)
+                .onMessage(GetStatus.class, this::onGetStatus)
                 .onSignal(PostStop.class, signal -> onPostStop())
                 .build();
+    }
+
+    public static final class GetStatus implements AirConditionCommand {
+        public final ActorRef<StatusResponse> replyTo;
+
+        public GetStatus(ActorRef<StatusResponse> replyTo) {
+            this.replyTo = replyTo;
+        }
+    }
+
+    public static final class StatusResponse {
+        public final boolean isOn;
+
+        public StatusResponse(boolean isOn) {
+            this.isOn = isOn;
+        }
     }
 
     private Behavior<AirConditionCommand> onPowerCommand(PowerAirCondition cmd) {
@@ -97,4 +119,10 @@ public class AirCondition extends AbstractBehavior<AirCondition.AirConditionComm
             this.simulate = simulate;
         }
     }
+
+    private Behavior<AirConditionCommand> onGetStatus(GetStatus msg) {
+        msg.replyTo.tell(new StatusResponse(isOn));
+        return this;
+    }
+
 }

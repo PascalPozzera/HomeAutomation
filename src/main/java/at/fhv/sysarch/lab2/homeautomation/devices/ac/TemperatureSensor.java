@@ -4,7 +4,6 @@ import akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.PostStop;
 import akka.actor.typed.javadsl.*;
-import at.fhv.sysarch.lab2.homeautomation.environment.EnvironmentSimulator;
 
 import java.time.Duration;
 
@@ -86,7 +85,7 @@ public class TemperatureSensor extends AbstractBehavior<TemperatureSensor.Temper
 
         if (simulateMode) {
             getContext().getLog().info("Switched to simulation mode");
-            timers.startTimerAtFixedRate(new Tick(), Duration.ofSeconds(5));
+            timers.startTimerAtFixedRate(new Tick(), Duration.ofSeconds(10));
         } else {
             getContext().getLog().info("Switched to manual mode");
             timers.cancel(new Tick());

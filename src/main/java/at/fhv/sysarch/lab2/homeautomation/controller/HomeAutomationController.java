@@ -56,6 +56,12 @@ public class HomeAutomationController {
 
         try {
             sourceType = HomeAutomation.SwitchEnvironmentSource.SourceType.valueOf(type.toUpperCase());
+            if (sourceType == HomeAutomation.SwitchEnvironmentSource.SourceType.MANUAL) {
+                airCondition.tell(new AirCondition.SwitchSensorMode(false));
+            } else {
+                airCondition.tell(new AirCondition.SwitchSensorMode(true));
+            }
+
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid source type. Use INTERNAL, EXTERNAL, or MANUAL");
         }
@@ -91,6 +97,20 @@ public class HomeAutomationController {
         airCondition.tell(new AirCondition.PowerAirCondition(on));
         return ResponseEntity.ok("Air conditioning " + (on ? "ON" : "OFF"));
     }
+
+    @GetMapping("/ac/status")
+    public ResponseEntity<Boolean> getACStatus() {
+        CompletionStage<AirCondition.StatusResponse> result =
+                AskPattern.ask(
+                        airCondition,
+                        AirCondition.GetStatus::new,
+                        Duration.ofSeconds(2),
+                        scheduler
+                );
+
+        return result.thenApply(res -> ResponseEntity.ok(res.isOn)).toCompletableFuture().join();
+    }
+
 
     // Blinds endpoints
 
