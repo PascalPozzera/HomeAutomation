@@ -63,8 +63,8 @@ export default function TemperatureSensorComponent() {
             </div>
 
             {open && (
-                <div className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-start justify-center z-50">
-                    <div
+                <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
+                <div
                         ref={modalRef}
                         className="bg-white rounded-xl p-6 w-96 shadow-2xl"
                     >

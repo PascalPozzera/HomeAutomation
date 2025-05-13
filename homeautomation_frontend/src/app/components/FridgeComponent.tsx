@@ -54,8 +54,6 @@ export default function FridgeComponent() {
     };
 
 
-
-
     const consume = async (id: string, quantity: number) => {
         await fetch(`/api/fridge/consume?id=${id}&quantity=${quantity}`, {method: "POST"});
         await fetchContents();
@@ -99,8 +97,9 @@ export default function FridgeComponent() {
             </div>
 
             {open && (
-                <div className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-start justify-center">
-                    <div
+                <div className="fixed inset-0 backdrop-blur-sm bg-white/20 flex items-center justify-center z-40">
+
+                <div
                         ref={modalRef}
                         className="bg-white rounded-xl p-6 w-[45rem] max-h-[90vh] overflow-y-auto shadow-2xl"
                     >
@@ -224,7 +223,9 @@ export default function FridgeComponent() {
                                                 <div className="text-gray-600 mb-1">
                                                     ID: <strong>{r.orderId}</strong> • {r.timestamp}
                                                 </div>
-                                                <div className="text-right font-semibold">Total: {r.totalPrice}€</div>
+                                                <div
+                                                    className="text-right font-semibold text-gray-800">Total: {r.totalPrice}€
+                                                </div>
 
                                                 <ul className="list-disc pl-4 text-gray-800 mb-1">
                                                     {r.items.map((item: any, i: number) => (
@@ -233,8 +234,6 @@ export default function FridgeComponent() {
                                                         </li>
                                                     ))}
                                                 </ul>
-                                                <div className="text-right font-semibold">Total: {r.totalPrice}€</div>
-
                                             </div>
                                         ))}
                                     </div>

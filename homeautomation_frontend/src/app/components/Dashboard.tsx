@@ -9,7 +9,7 @@ import FridgeComponent from "./FridgeComponent";
 export default function Dashboard() {
     return (
         <div className="flex items-center justify-center min-h-screen p-6 bg-gray-50 gap-10">
-            {/* Linke Spalte */}
+
             <div className="flex flex-col gap-6 items-center">
                 <div className="w-64 h-64">
                     <AirConditionComponent />
@@ -22,7 +22,6 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            {/* Hintergrundbild */}
             <div
                 className="w-[45vw] h-[45vw] bg-no-repeat bg-center bg-contain"
                 style={{
@@ -30,7 +29,6 @@ export default function Dashboard() {
                 }}
             />
 
-            {/* Rechte Spalte */}
             <div className="flex flex-col gap-6 items-center">
                 <div className="w-64 h-64">
                     <FridgeComponent />
