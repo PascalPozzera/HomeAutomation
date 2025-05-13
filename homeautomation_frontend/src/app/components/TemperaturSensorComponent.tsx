@@ -64,7 +64,7 @@ export default function TemperatureSensorComponent() {
 
             {open && (
                 <div className="fixed inset-0 bg-white/30 backdrop-blur-sm flex items-center justify-center z-50">
-                <div
+                    <div
                         ref={modalRef}
                         className="bg-white rounded-xl p-6 w-96 shadow-2xl"
                     >
@@ -81,73 +81,57 @@ export default function TemperatureSensorComponent() {
                         <div className="space-y-2 mb-6">
                             <p className="text-sm font-medium text-gray-600">🌍 Environment Source</p>
                             <div className="space-y-2">
-                                <button
-                                    onClick={() => switchEnvironmentSource("INTERNAL")}
-                                    className="w-full bg-blue-50 text-blue-800 py-2 rounded-lg hover:bg-blue-100"
-                                >
-                                    Internal
-                                </button>
-                                <button
-                                    onClick={() => switchEnvironmentSource("EXTERNAL")}
-                                    className="w-full bg-purple-50 text-purple-800 py-2 rounded-lg hover:bg-purple-100"
-                                >
-                                    External
-                                </button>
-                                <button
-                                    onClick={() => switchEnvironmentSource("MANUAL")}
-                                    className="w-full bg-gray-100 text-gray-800 py-2 rounded-lg hover:bg-gray-200"
-                                >
-                                    Manual
-                                </button>
+                                {["INTERNAL", "EXTERNAL", "MANUAL"].map((type) => (
+                                    <button
+                                        key={type}
+                                        onClick={() => switchEnvironmentSource(type as any)}
+                                        className={`w-full py-2 rounded-lg ${
+                                            environmentSource === type
+                                                ? "bg-blue-600 text-white"
+                                                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                                        }`}
+                                    >
+                                        {type.charAt(0) + type.slice(1).toLowerCase()}
+                                    </button>
+                                ))}
                             </div>
                         </div>
+
                         {environmentSource === "MANUAL" && (
                             <div className="space-y-2 mb-6">
                                 <p className="text-sm font-medium text-gray-600">🌡️ Simulate Temperature</p>
                                 <div className="flex gap-3">
-                                    <button
-                                        onClick={() => simulateTemp(30)}
-                                        className="flex-1 bg-white text-gray-700 border border-gray-300 py-2 rounded-lg hover:bg-gray-50"
-                                    >
-                                        30°C
-                                    </button>
-                                    <button
-                                        onClick={() => simulateTemp(8)}
-                                        className="flex-1 bg-white text-gray-700 border border-gray-300 py-2 rounded-lg hover:bg-gray-50"
-                                    >
-                                        8°C
-                                    </button>
+                                    {[30, 8].map((value) => (
+                                        <button
+                                            key={value}
+                                            onClick={() => simulateTemp(value)}
+                                            className="flex-1 bg-white text-gray-700 border border-gray-300 py-2 rounded-lg hover:bg-gray-50"
+                                        >
+                                            {value}°C
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                         )}
+
                         {environmentSource === "MANUAL" && (
                             <div className="space-y-2">
                                 <p className="text-sm font-medium text-gray-600">⛅ Set Weather</p>
                                 <div className="grid grid-cols-2 gap-2">
-                                    <button
-                                        onClick={() => setWeather("SUNNY")}
-                                        className="bg-yellow-100 text-yellow-900 py-2 rounded-lg hover:bg-yellow-200"
-                                    >
-                                        ☀️ Sunny
-                                    </button>
-                                    <button
-                                        onClick={() => setWeather("CLOUDY")}
-                                        className="bg-gray-300 text-gray-800 py-2 rounded-lg hover:bg-gray-400"
-                                    >
-                                        ☁️ Cloudy
-                                    </button>
-                                    <button
-                                        onClick={() => setWeather("RAINY")}
-                                        className="bg-blue-300 text-blue-900 py-2 rounded-lg hover:bg-blue-400"
-                                    >
-                                        🌧️ Rainy
-                                    </button>
-                                    <button
-                                        onClick={() => setWeather("SNOWY")}
-                                        className="bg-white text-gray-700 py-2 rounded-lg border hover:bg-gray-50"
-                                    >
-                                        ❄️ Snowy
-                                    </button>
+                                    {[
+                                        { label: "☀️ Sunny", value: "SUNNY", bg: "bg-yellow-100", text: "text-yellow-900" },
+                                        { label: "☁️ Cloudy", value: "CLOUDY", bg: "bg-gray-300", text: "text-gray-800" },
+                                        { label: "🌧️ Rainy", value: "RAINY", bg: "bg-blue-300", text: "text-blue-900" },
+                                        { label: "❄️ Snowy", value: "SNOWY", bg: "bg-white", text: "text-gray-700 border" },
+                                    ].map(({ label, value, bg, text }) => (
+                                        <button
+                                            key={value}
+                                            onClick={() => setWeather(value as any)}
+                                            className={`${bg} ${text} py-2 rounded-lg hover:opacity-80`}
+                                        >
+                                            {label}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                         )}
