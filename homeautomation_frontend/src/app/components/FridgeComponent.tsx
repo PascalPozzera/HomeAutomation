@@ -48,10 +48,13 @@ export default function FridgeComponent() {
     };
 
     const fetchReceipts = async () => {
-        const res = await fetch("/api/fridge/receipts");
+        const res = await fetch("/api/fridge/history");
         const data = await res.json();
-        setReceipts(data);
+        setReceipts(data.receipts || []);
     };
+
+
+
 
     const consume = async (id: string, quantity: number) => {
         await fetch(`/api/fridge/consume?id=${id}&quantity=${quantity}`, {method: "POST"});
@@ -219,8 +222,10 @@ export default function FridgeComponent() {
                                         {receipts.map((r: any, idx: number) => (
                                             <div key={idx} className="border rounded p-3 text-sm bg-white shadow-sm">
                                                 <div className="text-gray-600 mb-1">
-                                                    ID: <strong>{r.id}</strong> • {r.timestamp}
+                                                    ID: <strong>{r.orderId}</strong> • {r.timestamp}
                                                 </div>
+                                                <div className="text-right font-semibold">Total: {r.totalPrice}€</div>
+
                                                 <ul className="list-disc pl-4 text-gray-800 mb-1">
                                                     {r.items.map((item: any, i: number) => (
                                                         <li key={i}>
@@ -228,7 +233,8 @@ export default function FridgeComponent() {
                                                         </li>
                                                     ))}
                                                 </ul>
-                                                <div className="text-right font-semibold">Total: {r.total}€</div>
+                                                <div className="text-right font-semibold">Total: {r.totalPrice}€</div>
+
                                             </div>
                                         ))}
                                     </div>

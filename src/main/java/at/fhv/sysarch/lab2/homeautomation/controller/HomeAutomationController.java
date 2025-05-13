@@ -353,8 +353,20 @@ public class HomeAutomationController {
                 receiptMap.put("orderId", receipt.getOrderId());
                 receiptMap.put("timestamp", receipt.getTimestamp().toString());
                 receiptMap.put("totalPrice", receipt.getTotalPrice());
+
+                List<Map<String, Object>> itemsList = new ArrayList<>();
+                receipt.getItems().forEach(item -> {
+                    Map<String, Object> itemMap = new HashMap<>();
+                    itemMap.put("name", item.getProduct().getName());
+                    itemMap.put("price", item.getProduct().getPrice());
+                    itemMap.put("quantity", item.getQuantity());
+                    itemsList.add(itemMap);
+                });
+                receiptMap.put("items", itemsList);
+
                 receipts.add(receiptMap);
             });
+
 
             history.put("orders", orders);
             history.put("receipts", receipts);
