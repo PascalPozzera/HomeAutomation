@@ -2,6 +2,7 @@ import AirConditionComponent from "./ACComponent";
 import TemperatureSensorComponent from "@/app/components/TemperaturSensorComponent";
 import MediaStationComponent from "./MediaStationComponent";
 import BlindsComponent from "@/app/components/BlindsComponent";
+import FridgeComponent from "./FridgeComponent";
 
 export default function Dashboard() {
     return (
@@ -10,6 +11,7 @@ export default function Dashboard() {
             <TemperatureSensorComponent/>
             <MediaStationComponent/>
             <BlindsComponent/>
+            <FridgeComponent/>
         </div>
     );
 }
