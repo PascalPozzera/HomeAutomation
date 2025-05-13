@@ -126,6 +126,20 @@ public class HomeAutomationController {
         return ResponseEntity.ok("Blinds reset to automatic mode");
     }
 
+    @GetMapping("/blinds/status")
+    public ResponseEntity<Boolean> getBlindsStatus() {
+        CompletionStage<Blinds.StatusResponse> result =
+                AskPattern.ask(
+                        blinds,
+                        Blinds.GetStatus::new,
+                        Duration.ofSeconds(2),
+                        scheduler
+                );
+
+        return result.thenApply(res -> ResponseEntity.ok(res.isOpen)).toCompletableFuture().join();
+    }
+
+
     // Media Station endpoints
 
     @PostMapping("/media/play")

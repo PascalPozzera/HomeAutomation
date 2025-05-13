@@ -1,6 +1,6 @@
 package at.fhv.sysarch.lab2.homeautomation.devices.weather;
 
-import akka.actor.typed.ActorRef;
+import  akka.actor.typed.ActorRef;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.PostStop;
 import akka.actor.typed.javadsl.*;

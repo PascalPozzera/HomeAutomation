@@ -37,6 +37,8 @@ public class Blinds extends AbstractBehavior<Blinds.BlindsCommand> {
         }
     }
 
+
+
     private final String identifier;
     private boolean isOpen = true;
     private boolean moviePlaying = false;
@@ -58,8 +60,25 @@ public class Blinds extends AbstractBehavior<Blinds.BlindsCommand> {
                 .onMessage(EnrichedWeather.class, this::onWeatherChanged)
                 .onMessage(MovieStateChange.class, this::onMovieStateChanged)
                 .onMessage(ManualOverride.class, this::onManualOverride)
+                .onMessage(GetStatus.class, this::onGetStatus)
                 .onSignal(PostStop.class, signal -> onPostStop())
                 .build();
+    }
+
+    public static final class GetStatus implements BlindsCommand {
+        public final ActorRef<StatusResponse> replyTo;
+
+        public GetStatus(ActorRef<StatusResponse> replyTo) {
+            this.replyTo = replyTo;
+        }
+    }
+
+    public static final class StatusResponse {
+        public final boolean isOpen;
+
+        public StatusResponse(boolean isOpen) {
+            this.isOpen = isOpen;
+        }
     }
 
     private Behavior<BlindsCommand> onWeatherChanged(EnrichedWeather msg) {
@@ -104,4 +123,10 @@ public class Blinds extends AbstractBehavior<Blinds.BlindsCommand> {
         getContext().getLog().info("Blinds actor {} stopped", identifier);
         return this;
     }
+
+    private Behavior<BlindsCommand> onGetStatus(GetStatus msg) {
+        msg.replyTo.tell(new StatusResponse(isOpen));
+        return this;
+    }
+
 }
