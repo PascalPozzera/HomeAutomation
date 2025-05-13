@@ -223,9 +223,13 @@ export default function FridgeComponent() {
                                                 <div className="text-gray-600 mb-1">
                                                     ID: <strong>{r.orderId}</strong> • {r.timestamp}
                                                 </div>
-                                                <div
-                                                    className="text-right font-semibold text-gray-800">Total: {r.totalPrice}€
+                                                <div className="text-right text-gray-500 text-sm italic mb-1">
+                                                    (Includes 1.99€ processing fee)
                                                 </div>
+                                                <div className="text-right font-semibold text-gray-800">
+                                                    Total: {r.totalPrice}€
+                                                </div>
+
 
                                                 <ul className="list-disc pl-4 text-gray-800 mb-1">
                                                     {r.items.map((item: any, i: number) => (
