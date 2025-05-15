@@ -1,0 +1,24 @@
+
+services:
+  home-automation:
+    build: .
+    ports:
+      - "8080:8080"
+    command: >
+      java -cp app.jar at.fhv.sysarch.lab2.HomeAutomationApplication
+    restart: unless-stopped
+
+  order-processor:
+    build: .
+    ports:
+      - "9090:9090"
+    command: >
+      java -cp app.jar at.fhv.sysarch.lab2.homeautomation.orderprocessor.OrderProcessorServer
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./homeautomation_frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
